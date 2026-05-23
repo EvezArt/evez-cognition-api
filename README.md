@@ -1,56 +1,46 @@
-# EVEZ Cognition API
+# EVEZ Cognition API — NLP + Reasoning Engine
 
-**AI Agent Forensics as a Service.** Detect hallucinations, safety risks, and inconsistencies in LLM outputs.
-
-## What It Detects
-
-| Category | Signals |
-|----------|---------|
-| **Hallucination** | Vague quantifiers, hedging language, unsupported claims, confident falsehoods, fabricated entities |
-| **Safety** | PII (SSN-like), API keys, email addresses, IP addresses |
-| **Consistency** | Contradiction markers, temporal conflicts |
-| **Quality** | Lexical diversity, repetition ratio, sentence structure |
-
-## Verdicts
-
-`CLEAN` → `SUSPICIOUS` → `HIGH_RISK` → `CRITICAL`
+Real-time natural language processing and AI reasoning. Zero API cost via Groq Cloud.
 
 ## Quick Start
 
 ```bash
-# Analyze an agent output
-curl -X POST http://localhost:8080/analyze \
-  -H "Content-Type: application/json" \
-  -d '{"output": "Studies show that approximately 95% of experts say this is definitely true.", "agent_id": "my-agent-v1"}'
-
-# Response:
-# {"verdict": "SUSPICIOUS", "risk_score": 45.2, "hallucination": {"score": 1.2, "flags": [...]}, ...}
+git clone https://github.com/EvezArt/evez-cognition-api.git
+cd evez-cognition-api
+pip install -r requirements.txt
+export GROQ_API_KEY=***  # Free at console.groq.com
+python app.py
 ```
 
-### Docker
+## API
 
+### Analyze Text
 ```bash
-docker build -t evez-cognition-api .
-docker run -p 8080:8080 evez-cognition-api
+curl -X POST http://localhost:8081/analyze \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Analyze this", "task": "sentiment"}'
 ```
 
-## API Endpoints
+### Health
+```bash
+curl http://localhost:8081/health
+```
 
-| Method | Path | Description |
-|--------|------|-------------|
-| GET | `/health` | Service health |
-| POST | `/analyze` | Analyze single output |
-| POST | `/batch` | Analyze multiple outputs |
-| GET | `/model-info` | Detection model details |
-| POST | `/infer` | Groq LLM inference (if GROQ_API_KEY set) |
+## Models
+- llama-3.3-70b-versatile (default)
+- qwen3-32b
+- llama-4-scout
 
-## Architecture
+All via Groq Cloud free tier. Zero cost.
 
-- **Pure Python** — no ML model required, regex + heuristic forensics engine
-- **FastAPI** — async, auto-generated OpenAPI docs at `/docs`
-- **Docker** — multi-stage, non-root, health check
-- **Optional Groq** — add `GROQ_API_KEY` for LLM-assisted inference
+## Features
+- Sentiment analysis
+- Entity extraction
+- Summarization
+- Question answering
+- Contradiction detection (CAIN engine)
+- FSC doctrine validation
 
-## License
+---
 
-MIT
+*Part of [EVEZ-OS](https://github.com/EvezArt/evez-os) • $6/mo • Zero API Cost*
